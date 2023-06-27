@@ -1,0 +1,57 @@
+import random
+import smtplib
+
+# Função para gerar um código de verificação aleatório
+def generate_verification_code():
+    return str(random.randint(100000, 999999))
+
+# Função para enviar o código de verificação por e-mail
+def send_verification_email(email, code):
+    smtp_server = 'smtp.example.com'  # Servidor SMTP
+    smtp_port = 587  # Porta SMTP
+
+    sender_email = 'your_email@example.com'  # E-mail remetente
+    sender_password = 'your_password'  # Senha do e-mail remetente
+
+    message = f'Seu código de verificação é: {code}'
+
+    try:
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(sender_email, sender_password)
+        server.sendmail(sender_email, email, message)
+        print('Código de verificação enviado com sucesso por e-mail.')
+    except Exception as e:
+        print(f'Erro ao enviar e-mail de verificação: {str(e)}')
+    finally:
+        server.quit()
+
+# Função para verificar o código de verificação fornecido pelo usuário
+def verify_code(entered_code, generated_code):
+    return entered_code == generated_code
+
+# Simulação do processo de autenticação de duas etapas
+def two_step_verification():
+    # Simulação do login do usuário
+    email = input('Digite o seu e-mail: ')
+    password = input('Digite a sua senha: ')
+
+    # Verificação das credenciais do usuário (pode ser implementado de acordo com suas necessidades)
+
+    # Geração do código de verificação
+    verification_code = generate_verification_code()
+
+    # Envio do código de verificação por e-mail
+    send_verification_email(email, verification_code)
+
+    # Solicitação do código de verificação do usuário
+    entered_code = input('Digite o código de verificação recebido por e-mail: ')
+
+    # Verificação do código de verificação fornecido pelo usuário
+    if verify_code(entered_code, verification_code):
+        print('Código de verificação válido. Acesso concedido.')
+    else:
+        print('Código de verificação inválido. Acesso negado.')
+
+# Chamada da função principal
+two_step_verification()
